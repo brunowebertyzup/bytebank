@@ -1,41 +1,19 @@
+import br.com.zupacademy.bytebank.exception.InsufficientFundsException
 import br.com.zupacademy.bytebank.modelo.Endereco
+import java.lang.IllegalStateException
 
 fun main() {
-
-    val endereco = Endereco(
-        logradouro = "Rua Caetano",
-        complemento = "Apartamento",
-        cep = "00000-000"
-    )
-    val enderecoNovo = Endereco(
-        logradouro = "Rua Caetano",
-        complemento = "Apartamento",
-        cep = "00000-000"
-    )
-    println(endereco.equals(enderecoNovo))
-
-    println(endereco.hashCode())
-    println(enderecoNovo.hashCode())
-
-    println(endereco)
-    println(enderecoNovo)
-
-    println("${endereco.javaClass}@${Integer.toHexString(endereco.hashCode())}")
-
-    //Testes do comportamento de Any
-//    var objeto: Any = Any()
-//    imprime(objeto)
-//    imprime(1)
-//    imprime(1.0)
-//    val teste: Any = imprime(endereco)
-//    println(teste)
-//
-//    testaFuncionarios()
+    var enderecoNulo: Endereco? = Endereco(logradouro = "Rua da Mentira, 235")
+    var logradouroNovo: String? = enderecoNulo?.logradouro
+    enderecoNulo?.let {
+        println(it.logradouro.length)
+        val tamanhoComplemento: Int = it.complemento?.length
+        println(tamanhoComplemento)
+    }
+    teste("b")
 }
 
-fun imprime(valor: Any): Any {
-    println(valor)
-    return valor
+fun teste(valor: Any) {
+    val numero: Int? = valor as? Int
+    println(numero)
 }
-
-

@@ -1,9 +1,14 @@
 package br.com.zupacademy.bytebank.modelo
 
+import br.com.zupacademy.bytebank.exception.AuthenticationFailure
+import br.com.zupacademy.bytebank.exception.InsufficientFundsException
+import java.lang.NumberFormatException
+import java.lang.RuntimeException
+
 abstract class Conta(
     var titular: Cliente,
     val numero: Int
-) {
+) : Autenticavel {
     var saldo = 0.0
         protected set
 
@@ -17,6 +22,10 @@ abstract class Conta(
         total++
     }
 
+    override fun autentica(senha: Int): Boolean {
+        return titular.autentica(senha)
+    }
+
     fun deposita(valor: Double) {
         if (valor > 0) {
             this.saldo += valor
@@ -25,13 +34,16 @@ abstract class Conta(
 
     abstract fun saca(valor: Double)
 
-    fun transfere(valor: Double, destino: Conta): Boolean {
-        if (saldo >= valor) {
-            saldo -= valor
-            destino.deposita(valor)
-            return true
+    fun transfere(valor: Double, destino: Conta, senha: Int) {
+        if (saldo < valor) {
+            throw InsufficientFundsException(message = "O saldo é insuficiente, saldo atual: $saldo, valor a ser subtraído $valor")
         }
-        return false
+        if(!autentica(senha)) {
+            throw AuthenticationFailure()
+        }
+        //throw NumberFormatException()
+        saldo -= valor
+        destino.deposita(valor)
     }
 }
 
